@@ -1,11 +1,20 @@
 import '../index.css'
+import { useParams } from 'react-router-dom'
 
-const Note = ({ note, toggleImportant }) => {
+const Note = ({ notes, toggleImportance }) => {
+    const id = useParams().id
+    const note = notes.find(n => n.id === id)
+
+    if (!note) {
+        return <p>Note not found</p>
+    }
+
     const label = note.important ? 'make not important' : 'make important'
+
     return (
         <li className="note">
             <span>{note.content}</span>
-            <button onClick={toggleImportant}>{label}</button>
+            <button onClick={() => toggleImportance(id)}>{label}</button>
         </li>
     )
 }

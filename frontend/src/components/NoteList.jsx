@@ -6,6 +6,7 @@ import NoteForm from './NoteForm'
 import Togglable from './Togglable'
 import loginService from '../services/login'
 import noteService from '../services/notes'
+import { Link } from 'react-router-dom'
 
 const NoteList = ({ notes }) => {
 
@@ -25,26 +26,6 @@ const NoteList = ({ notes }) => {
       noteService.setToken(user.token)
     }
   }, [])
-
-  const toggleImportanceOf = id => {
-    const note = notes.find(n => n.id === id)
-    const changedNote = { ...note, important: !note.important }
-
-    noteService
-      .update(id, changedNote)
-      .then(returnedNote => {
-        //setNotes(notes.map(note => (note.id !== id ? note : returnedNote)))
-      })
-      .catch(() => {
-        setErrorMessage(
-          `Note '${note.content}' was already removed from server`
-        )
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-        //setNotes(notes.filter(n => n.id !== id))
-      })
-  }
 
   const handleLogin = async event => {
     event.preventDefault()
@@ -94,13 +75,20 @@ const NoteList = ({ notes }) => {
       </div>
 
       <ul>
-        {notesToShow.map(note => (
+        {/* {notesToShow.map(note => (
           <Note
             key={note.id}
             note={note}
             toggleImportance={() => toggleImportanceOf(note.id)}
           />
+        ))} */}
+
+        {notesToShow.map(note => (
+          <li key={note.id} >
+            <Link to={`/notes/${note.id}`} style={{color: "green"}}>{note.content}</Link>
+          </li>
         ))}
+
       </ul>
     </div>
   )

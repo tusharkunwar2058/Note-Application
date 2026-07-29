@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import noteService from './services/notes'
-
+import Note from './components/Note'
 import {
   BrowserRouter as Router,
   Routes, Route, Link
@@ -25,6 +25,27 @@ const App = () => {
     })
   }
 
+  const toggleImportanceOf = id => {
+    const note = notes.find(n => n.id === id)
+    const changedNote = { ...note, important: !note.important }
+
+    noteService
+      .update(id, changedNote)
+      .then(returnedNote => {
+        setNotes(notes.map(note => (note.id !== id ? note : returnedNote)))
+      })
+
+      .catch(() => {
+        setErrorMessage(
+          `Note '${note.content}' was already removed from server`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        //setNotes(notes.filter(n => n.id !== id))
+      })
+  }
+
   const padding = {
     padding: 5,
     color: "gold"
@@ -39,11 +60,15 @@ const App = () => {
       </div>
 
       <Routes>
+        <Route path="/notes/:id" element={
+          <Note notes={notes} toggleImportance={toggleImportanceOf} />
+        } />
+
         <Route path="/notes" element={
           <NoteList notes={notes} />
         } />
         <Route path="/create" element={
-          <NoteForm createNote={addNote}/>
+          <NoteForm createNote={addNote} />
         } />
         <Route path="/" element={<Home />} />
       </Routes>
