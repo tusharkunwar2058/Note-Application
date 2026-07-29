@@ -1,5 +1,10 @@
 import ReactDom from 'react-dom/client'
+import { BrowserRouter as Router } from 'react-router-dom'
 import App from './App'
 import './style.css'
 
-ReactDom.createRoot(document.getElementById('root')).render(<App />)
+ReactDom.createRoot(document.getElementById('root')).render(
+    <Router>
+        <App />
+    </Router>
+)

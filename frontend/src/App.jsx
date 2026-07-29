@@ -3,7 +3,8 @@ import noteService from './services/notes'
 import Note from './components/Note'
 import {
   BrowserRouter as Router,
-  Routes, Route, Link
+  Routes, Route, Link,
+  useMatch
 } from 'react-router-dom'
 import NoteList from './components/NoteList'
 import Home from './components/Home'
@@ -22,6 +23,12 @@ const App = () => {
   const addNote = noteObject => {
     noteService.create(noteObject).then(returnedNote => {
       setNotes(notes.concat(returnedNote))
+    })
+  }
+
+  const deleteNote = (id) => {
+    noteService.remove(id).then(() => {
+      setNotes(notes.filter(n => n.id !== id))
     })
   }
 
@@ -51,8 +58,13 @@ const App = () => {
     color: "gold"
   }
 
+  const match = useMatch('/notes/:id')
+  const note = match
+    ? notes.find(note => note.id === match.params.id)
+    : null
+
   return (
-    <Router>
+    <div>
       <div>
         <Link style={padding} to="/">home</Link>
         <Link style={padding} to="/notes">notes</Link>
@@ -61,7 +73,12 @@ const App = () => {
 
       <Routes>
         <Route path="/notes/:id" element={
-          <Note notes={notes} toggleImportance={toggleImportanceOf} />
+          <Note
+            notes={note}
+            toggleImportance={toggleImportanceOf}
+            deleteNote={deleteNote}
+          />
+
         } />
 
         <Route path="/notes" element={
@@ -74,7 +91,7 @@ const App = () => {
       </Routes>
 
       <Footer />
-    </Router>
+    </div>
   )
 }
 

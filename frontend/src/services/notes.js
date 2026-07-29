@@ -32,5 +32,9 @@ const update = (id, newObject) => {
   return request.then(response => response.data)
 }
 
+const remove = (id) => {
+  return axios.delete(`${baseUrl}/${id}`)
+}
+
 // since the key and the value(that is the variable for function) is same, we can write it like this
-export default { getAll, create, update, setToken }
+export default { getAll, create, update, setToken, remove }

@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const NoteForm = ({ createNote }) => {
   const [newNotes, setNewNotes] = useState('')
+  const navigate = useNavigate()
 
   const addNote = (event) => {
     event.preventDefault()
@@ -10,6 +12,7 @@ const NoteForm = ({ createNote }) => {
       content: newNotes,
       important: true
     })
+    navigate('/notes')
 
     setNewNotes('')
   }
@@ -18,7 +21,7 @@ const NoteForm = ({ createNote }) => {
     <div>
       <h2>Create a new note</h2>
       <form onSubmit={addNote}>
-        <input value={newNotes} onChange= {event => setNewNotes(event.target.value)}/>
+        <input value={newNotes} onChange={event => setNewNotes(event.target.value)} />
 
         <button type="submit">save</button>
       </form>
