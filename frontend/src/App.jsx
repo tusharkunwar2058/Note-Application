@@ -74,7 +74,7 @@ const App = () => {
       <Routes>
         <Route path="/notes/:id" element={
           <Note
-            notes={note}
+            note={note}
             toggleImportance={toggleImportanceOf}
             deleteNote={deleteNote}
           />
