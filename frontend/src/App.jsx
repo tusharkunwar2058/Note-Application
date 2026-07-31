@@ -8,8 +8,40 @@ import {
 } from 'react-router-dom'
 import NoteList from './components/NoteList'
 import Home from './components/Home'
-import Footer from './components/Footer'
+// import Footer from './components/Footer'
 import NoteForm from './components/NoteForm'
+import styled from 'styled-components'
+
+export const Button = styled.button`
+  background: Bisque;
+  font-size: 1em;
+  margin: 1em;
+  padding: 0.25em 1em;
+  border: 2px solid Chocolate;
+  border-radius: 3px;
+`
+
+export const Input = styled.input`
+  margin: 0.25em;
+  width: 300px;  
+`
+
+const Page = styled.div`
+  padding: 1em;
+  background: rgb(51, 51, 59);
+  color: white;
+`
+
+const Navigation = styled.div`
+  background: BurlyWood;
+  padding: 1em;
+`
+
+const Footer = styled.div`
+  background: Chocolate;
+  padding: 1em;
+  margin-top: 1em;
+`
 
 const App = () => {
   const [notes, setNotes] = useState([])
@@ -64,12 +96,13 @@ const App = () => {
     : null
 
   return (
-    <div>
-      <div>
+    
+      <Page>
+      <Navigation>
         <Link style={padding} to="/">home</Link>
         <Link style={padding} to="/notes">notes</Link>
         <Link style={padding} to="/create">new note</Link>
-      </div>
+      </Navigation>
 
       <Routes>
         <Route path="/notes/:id" element={
@@ -90,8 +123,11 @@ const App = () => {
         <Route path="/" element={<Home />} />
       </Routes>
 
-      <Footer />
-    </div>
+      <Footer>
+         Note app, Department of Computer Science, University of Konoha 2034
+      </Footer>
+    </Page>
+    
   )
 }
 
