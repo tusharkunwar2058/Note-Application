@@ -1,10 +1,9 @@
 import '../index.css'
 import { useNavigate, useParams } from 'react-router-dom'
 
-const Note = ({ notes, toggleImportance, deleteNote }) => {
+const Note = ({ note, toggleImportance, deleteNote }) => {
     const id = useParams().id
     const navigate = useNavigate()
-    const note = notes.find(n => n.id === id)
 
     if (!note) {
         return <p>Note not found</p>

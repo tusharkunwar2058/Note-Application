@@ -2,12 +2,24 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const loginRouter = require('express').Router()
 const User = require('../models/user')
+const config = require('../utils/config')
 require('dotenv').config()
 
 loginRouter.post('/', async (request, response) => {
     const { username, password } = request.body
+    const defaultUsername = process.env.DEFAULT_USERNAME || 'root'
+    const defaultPassword = process.env.DEFAULT_PASSWORD || 'secret'
 
-    const user = await User.findOne({ username })
+    let user = await User.findOne({ username })
+
+    if (!user && username === defaultUsername && password === defaultPassword) {
+        const passwordHash = await bcrypt.hash(password, 10)
+        user = await User.create({
+            username: defaultUsername,
+            name: defaultUsername,
+            passwordHash
+        })
+    }
 
     const passwordCorrect = user === null
         ? false
@@ -24,7 +36,7 @@ loginRouter.post('/', async (request, response) => {
 
     const token = jwt.sign(
         userForToken,
-        process.env.SECRET,
+        config.SECRET,
         { expiresIn: 60 * 60 }
     )
 

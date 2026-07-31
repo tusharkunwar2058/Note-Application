@@ -3,6 +3,7 @@ const Note = require('../models/note')
 const { error } = require('../utils/logger')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
+const config = require('../utils/config')
 require('dotenv').config()
 
 notesRouter.get('/', async (request, response) => {
@@ -51,7 +52,7 @@ const getTokenFrom = request => {
 notesRouter.post('/', async (request, response) => {
   const body = request.body
 
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+  const decodedToken = jwt.verify(getTokenFrom(request), config.SECRET)
 
   if (!decodedToken.id) {
     return response.status(401).json({error: "invalid token"})

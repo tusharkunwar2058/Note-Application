@@ -7,11 +7,11 @@ import Togglable from './Togglable'
 import loginService from '../services/login'
 import noteService from '../services/notes'
 import { Link } from 'react-router-dom'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material'
 
-const NoteList = ({ notes }) => {
+const NoteList = ({ notes, notification, setNotification }) => {
 
   const [showAll, setShowAll] = useState(true)
-  const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -38,11 +38,15 @@ const NoteList = ({ notes }) => {
       setUser(user)
       setUsername('')
       setPassword('')
-    } catch {
-      setErrorMessage('wrong credentials')
+      setNotification({ text: `Welcome ${user.name}`, type: 'success' })
       setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+        setNotification(null)
+      }, 3000)
+    } catch {
+      setNotification({ text: 'wrong credentials', type: 'error' })
+      setTimeout(() => {
+        setNotification(null)
+      }, 3000)
     }
   }
 
@@ -59,11 +63,13 @@ const NoteList = ({ notes }) => {
       />
     </Togglable>
   )
+  // console.log(notes);
 
   return (
     <div>
-      <h1>Notes</h1>
-      <Notification message={errorMessage} />
+      <h2>Notes</h2>
+
+      {/* <Notification message={errorMessage} />
 
       {!user && loginForm()}
       {user && <p>{user.name} is logged in</p>}
@@ -75,13 +81,6 @@ const NoteList = ({ notes }) => {
       </div>
 
       <ul>
-        {/* {notesToShow.map(note => (
-          <Note
-            key={note.id}
-            note={note}
-            toggleImportance={() => toggleImportanceOf(note.id)}
-          />
-        ))} */}
 
         {notesToShow.map(note => (
           <li key={note.id} >
@@ -89,7 +88,48 @@ const NoteList = ({ notes }) => {
           </li>
         ))}
 
-      </ul>
+      </ul> */}
+
+      {!user && loginForm()}
+      {user && <p>{user.name} is logged in</p>}
+
+      <TableContainer component={Paper}>
+        <Table>
+
+          <TableHead>
+            <TableRow>
+              <TableCell>content</TableCell>
+              <TableCell>user</TableCell>
+              <TableCell>important</TableCell>
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {notes.map(note => (
+              <TableRow key={note.id}>
+                <TableCell>
+                  <Link to={`/notes/${note.id}`}>
+                    {note.content}
+                  </Link>
+                </TableCell>
+
+                <TableCell>
+                  {note.user?.name || "unknown"}
+                </TableCell>
+
+                <TableCell>
+                  {note.important ? 'yes' : ''}
+                </TableCell>
+
+              </TableRow>
+
+            ))}
+          </TableBody>
+
+        </Table>
+      </TableContainer>
+
+
     </div>
   )
 }

@@ -60,6 +60,18 @@ describe('when there is initially one user in db', () => {
     assert(result.body.error.includes('expected `username` to be unique'))
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
     })
+
+    test('login succeeds with a default root user when no user exists', async () => {
+        await User.deleteMany({})
+
+        const result = await api
+            .post('/api/login')
+            .send({ username: 'root', password: 'secret' })
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+        assert.strictEqual(result.body.username, 'root')
+    })
 })
 
 after(async () => {
